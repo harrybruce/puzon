@@ -1,0 +1,8 @@
+{
+  "name": "puzon",
+  "version": "0.0.1",
+  "authors": [
+    "Harry Willis"
+  ],
+  "main": "./puzon.js"
+}
