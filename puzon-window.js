@@ -10,6 +10,10 @@ _.extend(Puzon.prototype, Backbone.Events, {
   initialize: function(options){
     this.element = $(options.element);
     this.idleTime = options.idleTime;
+    options.getCallback(_.bind(function() {
+      this.pause();
+      this.start();
+    }, this));
     this.clock = 0;
     this.lessonTimer = 0;
     this.start();
