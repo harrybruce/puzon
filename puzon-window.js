@@ -1,6 +1,7 @@
 var Backbone = require('backbone');
 var $ = require('jquery');
 var _ = require('underscore');
+var LocalStorage = require('./local-puzon.js');
 
 var Puzon = function(opts) {
     this.initialize.call(this, opts);
@@ -8,17 +9,21 @@ var Puzon = function(opts) {
 
 _.extend(Puzon.prototype, Backbone.Events, {
   initialize: function(options){
+    this.localStorage = new LocalStorage({
+      lessonName: options.lessonName
+    });
     this.element = $(options.element);
     this.idleTime = options.idleTime;
     options.getCallback(_.bind(this.continueCallBack, this));
     this.clock = 0;
-    this.lessonTimer = 0;
+
     this.start();
     this.bindAll();
   },
   tick: function() {
     this.clock++;
     this.lessonTimer++;
+    this.localStorage.setLessonTime(this.lessonTimer);
     if(this.clock > this.idleTime) {
       console.log('Idle time reached, pausing lesson');
       this.trigger('lesson_paused')
@@ -33,13 +38,17 @@ _.extend(Puzon.prototype, Backbone.Events, {
   pause: function() {
     console.log('pausing');
     window.clearInterval(this.timer);
+    this.timer = null;
     this.clock = 0;
   },
   start: function(offset) {
     console.log('starting');
-    this.timer = setInterval(_.bind(function() {
-      this.tick();
-    }, this), 1000);
+    this.lessonTimer = this.localStorage.getLessonTime();
+    if(!this.timer) {
+      this.timer = setInterval(_.bind(function() {
+        this.tick();
+      }, this), 1000);
+    }
   },
   continueCallBack: function() {
     this.pause();
