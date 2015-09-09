@@ -57,8 +57,8 @@ _.extend(Puzon.prototype, Backbone.Events, {
   bindAll: function(){
     this.element.get(0).addEventListener("click", _.bind(this.reset, this), true);
     this.element.get(0).addEventListener("scroll", _.bind(this.reset, this), true);
-    this.element.get(0).addEventListener("blur", _.bind(this.pause, this), true);
-    this.element.get(0).addEventListener("focus", _.bind(this.start, this), true);
+    $(window).get(0).addEventListener("blur", _.bind(this.pause, this), true);
+    $(window).get(0).addEventListener("focus", _.bind(this.start, this), true);
     this.element.get(0).addEventListener("mousemove", _.bind(this.reset, this), true);
     this.element.get(0).addEventListener("keypress", _.bind(this.reset, this), true);
   }
