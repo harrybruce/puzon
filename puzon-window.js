@@ -3,11 +3,12 @@ var $ = require('jquery');
 var _ = require('underscore');
 
 var Puzon = function(opts) {
-    this.initialize.call(this);
+    this.initialize.call(this, opts);
 }
 
 _.extend(Puzon.prototype, Backbone.Events, {
   initialize: function(options){
+    this.element = $(options.element);
     this.clock = 0;
     this.lessonTimer = 0;
     this.start();
@@ -34,10 +35,10 @@ _.extend(Puzon.prototype, Backbone.Events, {
     }, this), 1000);
   },
   bindAll: function(){
-    $(window).bind('click', _.bind(this.reset, this));
-    $(window).scroll( _.bind(this.reset, this));
-    $(window).bind('blur', _.bind(this.pause, this));
-    $(window).bind('focus', _.bind(this.start, this));
+    this.element.get(0).addEventListener("click", _.bind(this.reset, this), true);
+    this.element.get(0).addEventListener("scroll", _.bind(this.reset, this), true);
+    this.element.get(0).addEventListener("blur", _.bind(this.pause, this), true);
+    this.element.get(0).addEventListener("focus", _.bind(this.start, this), true);
   }
 })
-module.exports = new Puzon();
+module.exports = Puzon;
