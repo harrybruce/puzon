@@ -30,7 +30,7 @@ _.extend(Puzon.prototype, Backbone.Events, {
     console.log(this.clock, this.lessonTimer, this.idleTime);
   },
   reset: function() {
-    console.log('reset called');
+    console.log('resetting');
     this.clock = 0;
   },
   pause: function() {
@@ -39,7 +39,7 @@ _.extend(Puzon.prototype, Backbone.Events, {
     this.clock = 0;
   },
   start: function(offset) {
-    console.log('resuming');
+    console.log('starting');
     this.timer = setInterval(_.bind(function() {
       this.tick();
     }, this), 1000);
