@@ -54,13 +54,22 @@ _.extend(Puzon.prototype, Backbone.Events, {
     this.pause();
     this.start();
   },
+  handleWindowFocus: function(evt) {
+    if(document.visibilityState === 'hidden') {
+      this.pause();
+    } else {
+      this.start();
+    }
+  },
   bindAll: function(){
     this.element.get(0).addEventListener("click", _.bind(this.reset, this), true);
     this.element.get(0).addEventListener("scroll", _.bind(this.reset, this), true);
-    $(window).get(0).addEventListener("blur", _.bind(this.pause, this), true);
-    $(window).get(0).addEventListener("focus", _.bind(this.start, this), true);
     this.element.get(0).addEventListener("mousemove", _.bind(this.reset, this), true);
     this.element.get(0).addEventListener("keypress", _.bind(this.reset, this), true);
+    this.setUpVisibilityHandlers();
+  },
+  setUpVisibilityHandlers: function() {
+    $(window).get(0).addEventListener("visibilitychange", _.bind(this.handleWindowFocus, this), true);
   }
 })
 module.exports = Puzon;
