@@ -12,11 +12,11 @@ _.extend(Puzon.prototype, Backbone.Events, {
     this.element = $(options.element);
     this.idleTime = options.idleTime;
     this.lessonName = options.lessonName;
-    options.getCallback(_.bind(this.continueCallBack, this));
     this.clock = 0;
+    options.getCallback(_.bind(this.continueCallBack, this));
 
-    this.start();
     this.bindAll();
+    this.start();
   },
   tick: function() {
     this.clock++;
