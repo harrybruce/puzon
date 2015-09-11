@@ -9,11 +9,9 @@ var Puzon = function(opts) {
 
 _.extend(Puzon.prototype, Backbone.Events, {
   initialize: function(options){
-    this.localStorage = new LocalStorage({
-      lessonName: options.lessonName
-    });
     this.element = $(options.element);
     this.idleTime = options.idleTime;
+    this.lessonName = options.lessonName;
     options.getCallback(_.bind(this.continueCallBack, this));
     this.clock = 0;
 
@@ -23,13 +21,13 @@ _.extend(Puzon.prototype, Backbone.Events, {
   tick: function() {
     this.clock++;
     this.lessonTimer++;
-    this.localStorage.setLessonTime(this.lessonTimer);
+    console.log(this.clock, this.lessonTimer);
+    this.reportTiming();
     if(this.clock > this.idleTime) {
       console.log('Idle time reached, pausing lesson');
       this.trigger('lesson_paused')
       this.pause();
     }
-    console.log(this.clock, this.lessonTimer, this.idleTime);
   },
   reset: function() {
     console.log('resetting');
@@ -43,7 +41,7 @@ _.extend(Puzon.prototype, Backbone.Events, {
   },
   start: function(offset) {
     console.log('starting');
-    this.lessonTimer = this.localStorage.getLessonTime();
+    this.lessonTimer = LocalStorage.get('lessonTimer') || 0;
     if(!this.timer) {
       this.timer = setInterval(_.bind(function() {
         this.tick();
@@ -60,6 +58,9 @@ _.extend(Puzon.prototype, Backbone.Events, {
     } else {
       this.start();
     }
+  },
+  reportTiming: function() {
+    LocalStorage.set("lessonTimer", this.lessonTimer);
   },
   bindAll: function(){
     this.element.get(0).addEventListener("click", _.bind(this.reset, this), true);
