@@ -5,14 +5,30 @@
     "Harry Willis"
   ],
   "scripts": {
-    "test": "mocha test"
+    "start": "mochify --watch",
+    "phantom": "mochify",
+    "wd": "mochify --wd",
+    "cover": "mochify --cover",
+    "test": "npm run phantom && npm run wd && npm run cover"
   },
   "main": "./src/puzon-window.js",
   "dependencies": {
-    "local-puzon": "https://github.com/harrybruce/local-puzon.git"
+    "local-puzon": "https://github.com/harrybruce/local-puzon.git",
+    "backbone": "^1.2.3",
+    "jquery": "^2.1.4",
+    "underscore": "*"
   },
   "devDependencies": {
     "chai": "^3.2.0",
-    "mocha": "^2.3.2"
+    "karma": "^0.13.9",
+    "karma-chrome-launcher": "^0.2.0",
+    "karma-firefox-launcher": "^0.1.6",
+    "karma-ie-launcher": "^0.2.0",
+    "karma-mocha": "^0.2.0",
+    "karma-requirejs": "^0.2.2",
+    "mocha": "^2.3.2",
+    "mochify": "^2.13.0",
+    "requirejs": "^2.1.20",
+    "sinon": "^1.16.1"
   }
 }

@@ -11,7 +11,6 @@ _.extend(Puzon.prototype, Backbone.Events, {
   initialize: function(options){
     this.element = $(options.element);
     this.idleTime = options.idleTime;
-    this.lessonName = options.lessonName;
     this.clock = 0;
     options.getCallback(_.bind(this.continueCallBack, this));
 
