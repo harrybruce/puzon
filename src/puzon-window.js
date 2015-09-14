@@ -1,7 +1,7 @@
 var Backbone = require('backbone');
 var $ = require('jquery');
 var _ = require('underscore');
-var LocalStorage = require('./local-puzon.js');
+var LocalStorage = require('local-puzon');
 
 var Puzon = function(opts) {
     this.initialize.call(this, opts);
