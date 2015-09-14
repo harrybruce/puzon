@@ -108,3 +108,95 @@ describe("tick", function() {
     expect(spy.called).to.equal(true);
   });
 })
+
+describe('reset', function() {
+  var puzon;
+  beforeEach(function() {
+    puzon = new Puzon({
+      element: window,
+      idleTime: 2,
+      lessonName: 'lessonOne',
+      getCallback: _.bind(function(func) {
+        this.callBack = func;
+      }, this)
+    });
+  });
+  it('sets the clock back to 0', function() {
+    puzon.clock = 9;
+    puzon.reset();
+    expect(puzon.clock).to.equal(0);
+  })
+})
+
+describe('pause', function() {
+  var puzon;
+  beforeEach(function() {
+    puzon = new Puzon({
+      element: window,
+      idleTime: 2,
+      lessonName: 'lessonOne',
+      getCallback: _.bind(function(func) {
+        this.callBack = func;
+      }, this)
+    });
+  });
+  it('clears the timer', function() {
+    puzon.clock = 9;
+    puzon.timer = setInterval(_.bind(function() {
+    }, this), 1000);
+    puzon.pause();
+    expect(puzon.clock).to.equal(0);
+    expect(puzon.timer).to.equal(null);
+  })
+})
+
+describe('start', function() {
+  var puzon;
+  var spy;
+  beforeEach(function() {
+    puzon = new Puzon({
+      element: window,
+      idleTime: 2,
+      lessonName: 'lessonOne',
+      getCallback: _.bind(function(func) {
+        this.callBack = func;
+      }, this)
+    });
+  });
+  afterEach(function() {
+    spy.restore();
+  });
+  it('initialises the lessonTimer to the stored value', function() {
+    spy = sinon.spy(puzon, "fetchTiming");
+    puzon.start();
+    expect(spy.called).to.equal(true);
+  });
+
+  it('does not set a timer if one already exists', function() {
+    puzon.timer = {};
+    spy = sinon.spy(window, "setInterval");
+    puzon.start();
+    expect(spy.called).to.equal(false);
+  });
+
+  it('sets a timer if one does not already exists', function() {
+    puzon.timer = undefined;
+    spy = sinon.spy(window, "setInterval");
+    puzon.start();
+    expect(spy.called).to.equal(true);
+  })
+});
+
+describe("handleWindowFocus", function() {
+  //Phantomjs doesn't seem to support visibility api.
+});
+
+describe("reportTiming", function() {
+  //TODO
+  //(When we've plugged in a remote storage solution)
+});
+
+describe("fetchTiming", function() {
+  //TODO
+  //(When we've plugged in a remote storage solution)
+});

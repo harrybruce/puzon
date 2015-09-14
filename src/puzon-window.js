@@ -40,7 +40,7 @@ _.extend(Puzon.prototype, Backbone.Events, {
   },
   start: function(offset) {
     console.log('starting');
-    this.lessonTimer = LocalStorage.get('lessonTimer') || 0;
+    this.lessonTimer = this.fetchTiming();
     if(!this.timer) {
       this.timer = setInterval(_.bind(function() {
         this.tick();
@@ -52,6 +52,7 @@ _.extend(Puzon.prototype, Backbone.Events, {
     this.start();
   },
   handleWindowFocus: function(evt) {
+
     if(document.visibilityState === 'hidden') {
       this.pause();
     } else {
@@ -59,7 +60,14 @@ _.extend(Puzon.prototype, Backbone.Events, {
     }
   },
   reportTiming: function() {
+    //TODO
+    //Set remotely stored times
     LocalStorage.set("lessonTimer", this.lessonTimer);
+  },
+  fetchTiming: function() {
+    //TODO
+    //Get remotely stored times
+    return LocalStorage.get('lessonTimer') || 0;
   },
   bindAll: function(){
     this.element.get(0).addEventListener("click", _.bind(this.reset, this), true);
