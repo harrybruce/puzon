@@ -7,9 +7,9 @@
   "scripts": {
     "start": "mochify --watch",
     "phantom": "mochify",
-    "wd": "mochify --wd",
+    "wd": "mochify",
     "cover": "mochify --cover",
-    "test": "npm run phantom && npm run wd && npm run cover"
+    "test": "npm run phantom"
   },
   "main": "./src/puzon-window.js",
   "dependencies": {

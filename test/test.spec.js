@@ -130,6 +130,7 @@ describe('reset', function() {
 
 describe('pause', function() {
   var puzon;
+  var spy;
   beforeEach(function() {
     puzon = new Puzon({
       element: window,
@@ -141,10 +142,12 @@ describe('pause', function() {
     });
   });
   it('clears the timer', function() {
+    spy = sinon.spy(window, 'clearInterval');
     puzon.clock = 9;
     puzon.timer = setInterval(_.bind(function() {
     }, this), 1000);
     puzon.pause();
+    expect(spy.called).to.equal(true);
     expect(puzon.clock).to.equal(0);
     expect(puzon.timer).to.equal(null);
   })
