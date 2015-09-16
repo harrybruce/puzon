@@ -2,7 +2,7 @@ var Backbone = require("backbone");
 var $ = require("jquery");
 var _ = require("underscore");
 var Clock = require("./clock.js");
-var LocalStorage = require("./local-storage.js");
+
 
 var StudyTime = function(opts) {
     this.initialize.call(this, opts);
@@ -13,19 +13,12 @@ _.extend(StudyTime.prototype, Backbone.Events, {
         this.element = $(options.element);
         options.getCallback(_.bind(this.continueCallBack, this));
 
+        this.clock = new Clock({idleTime: 10});
         this.bindAll();
-        this.Clock = new Clock({idleTime: 10});
 
     },
     continueCallBack: function() {
-        if(!this.idleThresholdReached) {
-            //User clicked within 60 seconds
-            this.pause();
-            this.start();
-        } else {
-            //User didn't click within 60 seconds.
-            //NOT SURE WHAT TO DO HERE.
-        }
+        this.clock.continue();
     },
     handleWindowFocus: function() {
         if(document.visibilityState === "hidden") {
@@ -35,10 +28,10 @@ _.extend(StudyTime.prototype, Backbone.Events, {
         }
     },
     bindAll: function(){
-        this.element.get(0).addEventListener("click", _.bind(this.clock.reset, this), true);
-        this.element.get(0).addEventListener("scroll", _.bind(this.clock.reset, this), true);
-        this.element.get(0).addEventListener("mousemove", _.bind(this.clock.reset, this), true);
-        this.element.get(0).addEventListener("keypress", _.bind(this.clock.reset, this), true);
+        this.element.get(0).addEventListener("click", _.bind(this.clock.reset, this.clock), true);
+        this.element.get(0).addEventListener("scroll", _.bind(this.clock.reset, this.clock), true);
+        this.element.get(0).addEventListener("mousemove", _.bind(this.clock.reset, this.clock), true);
+        this.element.get(0).addEventListener("keypress", _.bind(this.clock.reset, this.clock), true);
         this.setUpVisibilityHandlers();
     },
     setUpVisibilityHandlers: function() {

@@ -1,13 +1,15 @@
 var $ = require("jquery");
 var _ = require("underscore");
 var Backbone = require("backbone");
+var LocalStorage = require("./local-storage.js");
 
 var Clock = function(opts) {
     this.initialize.call(this, opts);
 };
 
-_.extend(Clock.prototype, Backbone.Model, {
+_.extend(Clock.prototype, Backbone.Events, {
     initialize: function(options){
+        console.log("Clock initialsing with: ", options);
         this.times = {
             inactiveTimer: 0,
             idleTimer: 0,
@@ -18,34 +20,39 @@ _.extend(Clock.prototype, Backbone.Model, {
             idleClock: null
         };
         this.idleTime = options.idleTime;
-        options.getCallback(_.bind(this.continueCallBack, this));
         this.start();
     },
     tick: function() {
         this.times.inactiveTimer++;
         this.times.lessonTimer++;
+        console.log("Tick: ", this.times.inactiveTimer, this.times.lessonTimer);
         this.reportTiming();
         if(this.times.inactiveTimer > this.idleTime) {
             this.idleTimeReached();
         }
     },
     reset: function() {
+        console.log("Reset");
         this.times.inactiveTimer = 0;
     },
     pause: function() {
+        console.log("Pause");
         window.clearInterval(this.clocks.mainClock);
         this.clocks.mainClock = null;
         this.times.inactiveTimer = 0;
     },
     start: function() {
-        this.times.lessonTimer = this.fetchTiming() + this.idleTime;
+        debugger;
+        this.times.lessonTimer = this.fetchTiming() + this.times.idleTimer;
+        console.log("Starting: ", this.times.lessonTimer);
         if(!this.timer) {
             this.clocks.mainClock = setInterval(_.bind(function() {
                 this.tick();
             }, this), 1000);
         }
     },
-    continueCallBack: function() {
+    continue: function() {
+        console.log("Continue");
         if(!this.idleThresholdReached) {
             //User clicked within 60 seconds
             this.pause();
@@ -55,10 +62,6 @@ _.extend(Clock.prototype, Backbone.Model, {
             //NOT SURE WHAT TO DO HERE.
         }
     },
-
-
-    //The two methods below will talk to a reporting module (probably)
-    //to get/set times remotely
     reportTiming: function() {
         //TODO
         //Set remotely stored times
@@ -67,19 +70,21 @@ _.extend(Clock.prototype, Backbone.Model, {
     fetchTiming: function() {
         //TODO
         //Get remotely stored times
-        return LocalStorage.get("lessonTimer") || 0;
+        return Number(LocalStorage.get("lessonTimer")) || 0;
     },
     idleTimeReached: function() {
+        console.log('IdleTimeReached');
         this.trigger("lesson_paused");
         this.times.idleTimer = 0;
         this.pause();
         this.clocks.idleClock = setInterval(_.bind(function() {
             this.times.idleTimer++;
+            console.log("Running idle timer: ", this.times.idleTimer);
             if(this.times.idleTimer === 60) {
                 this.idleThresholdReached = true;
                 window.clearInterval(this.clocks.idleClock);
             }
-        }, this), 1);
+        }, this), 1000);
     }
 });
 
