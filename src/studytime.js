@@ -13,11 +13,16 @@ _.extend(StudyTime.prototype, Backbone.Events, {
         this.element = $(options.element);
         options.getCallback(_.bind(this.continueCallBack, this));
 
-        this.clock = new Clock({idleTime: 10});
+        this.clock = new Clock({idleTime: 5});
+        this.listenTo(this.clock, "lesson_paused", function() {
+            this.trigger("lesson_paused");
+            this.unbindAll();
+        });
         this.bindAll();
 
     },
     continueCallBack: function() {
+        this.bindAll();
         this.clock.continue();
     },
     handleWindowFocus: function() {
@@ -27,15 +32,24 @@ _.extend(StudyTime.prototype, Backbone.Events, {
             this.clock.start();
         }
     },
+    unbindAll: function() {
+        this.element.get(0).removeEventListener("click", this.handler, true);
+        this.element.get(0).removeEventListener("scroll", this.handler, true);
+        this.element.get(0).removeEventListener("mousemove", this.handler, true);
+        this.element.get(0).removeEventListener("keypress", this.handler, true);
+        $(window).get(0).removeEventListener("visibilitychange", this.focusHandler, true);
+    },
     bindAll: function(){
-        this.element.get(0).addEventListener("click", _.bind(this.clock.reset, this.clock), true);
-        this.element.get(0).addEventListener("scroll", _.bind(this.clock.reset, this.clock), true);
-        this.element.get(0).addEventListener("mousemove", _.bind(this.clock.reset, this.clock), true);
-        this.element.get(0).addEventListener("keypress", _.bind(this.clock.reset, this.clock), true);
+        this.handler = _.bind(this.clock.reset, this.clock);
+        this.element.get(0).addEventListener("click", this.handler, true);
+        this.element.get(0).addEventListener("scroll", this.handler, true);
+        this.element.get(0).addEventListener("mousemove", this.handler, true);
+        this.element.get(0).addEventListener("keypress", this.handler, true);
         this.setUpVisibilityHandlers();
     },
     setUpVisibilityHandlers: function() {
-        $(window).get(0).addEventListener("visibilitychange", _.bind(this.handleWindowFocus, this), true);
+        this.focusHandler =  _.bind(this.handleWindowFocus, this);
+        $(window).get(0).addEventListener("visibilitychange", this.focusHandler, true);
     }
 });
 module.exports = StudyTime;

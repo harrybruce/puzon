@@ -42,7 +42,6 @@ _.extend(Clock.prototype, Backbone.Events, {
         this.times.inactiveTimer = 0;
     },
     start: function() {
-        debugger;
         this.times.lessonTimer = this.fetchTiming() + this.times.idleTimer;
         console.log("Starting: ", this.times.lessonTimer);
         if(!this.timer) {
@@ -53,6 +52,8 @@ _.extend(Clock.prototype, Backbone.Events, {
     },
     continue: function() {
         console.log("Continue");
+        window.clearInterval(this.clocks.idleClock);
+        this.times.idleTimer = 0;
         if(!this.idleThresholdReached) {
             //User clicked within 60 seconds
             this.pause();
