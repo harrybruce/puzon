@@ -1,25 +1,30 @@
 {
-  "name": "puzon",
+  "name": "studytime",
   "version": "0.0.1",
-  "authors": [
-    "Harry Willis"
-  ],
   "scripts": {
     "start": "mochify --watch",
     "phantom": "mochify",
     "wd": "mochify",
     "cover": "mochify --cover",
-    "test": "npm run phantom"
+    "lint": "node node_modules/eslint/bin/eslint.js ./src/**",
+    "test": "npm run lint;npm run phantom"
   },
-  "main": "./src/puzon-window.js",
+  "main": "./src/studytime.js",
   "dependencies": {
-    "local-puzon": "https://github.com/harrybruce/local-puzon.git",
     "backbone": "^1.2.3",
     "jquery": "^2.1.4",
     "underscore": "*"
   },
+  "eslintConfig": {
+    "globals": {
+        "localStorage": true,
+        "window": true,
+        "document": true
+    }
+  },
   "devDependencies": {
     "chai": "^3.2.0",
+    "eslint": "^1.4.1",
     "karma": "^0.13.9",
     "karma-chrome-launcher": "^0.2.0",
     "karma-firefox-launcher": "^0.1.6",
