@@ -14,7 +14,7 @@ _.extend(StudyTime.prototype, Backbone.Events, {
         options.getCallback(_.bind(this.continueCallBack, this));
 
         this.bindAll();
-        this.Clock = new Clock({options.idleTime: 10});
+        this.Clock = new Clock({idleTime: 10});
 
     },
     continueCallBack: function() {
